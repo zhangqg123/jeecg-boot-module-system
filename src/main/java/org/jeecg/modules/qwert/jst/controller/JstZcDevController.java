@@ -386,33 +386,17 @@ public class JstZcDevController extends JeecgController<JstZcDev, IJstZcDevServi
 	@ApiOperation(value = "jst_zc_dev-读取", notes = "jst_zc_dev-读取")
 	@GetMapping(value = "/handleRead")
 	public Result<?> handleRead(HttpServletRequest req) {
-//		long start, end;
-//		start = System.currentTimeMillis();
 		boolean allflag = true;
 		JstConstant.runflag=true;
 		String catNo = req.getParameter("devCat");
-//		QueryWrapper<JstZcCat> cqw = QueryGenerator.initQueryWrapper(new JstZcCat(), null);
-//		cqw.eq("has_child", "0");
-//		cqw.eq("origin_id",catNo);
 		jzcList = jstZcCatService.queryJzcList();
 		
-//		QueryWrapper<JstZcDev> dqw = QueryGenerator.initQueryWrapper(new JstZcDev(), null);
-//		dqw.eq("status", "0");
-//		dqw.orderByAsc("dev_no");
 		jzdList = jstZcDevService.queryJzdList();
 
-//		JstZcTarget jstZcTarget = new JstZcTarget();
-//		jstZcTarget.setDevType(jstZcCat.getOriginId());
-//		QueryWrapper<JstZcTarget> zqw = QueryGenerator.initQueryWrapper(new JstZcTarget(), null);
-//		zqw.orderByAsc("instruct");
-//		zqw.orderByAsc("tmp");
 		jztList = jstZcTargetService.queryJztList();			
 		
         MyThread mt=new MyThread(allflag,catNo);
         new Thread(mt).start();
-//		threadWork(allflag, catNo);
-//		end = System.currentTimeMillis();
-//		System.out.println("开始时间:" + start + "; 结束时间:" + end + "; 用时:" + (end - start) + "(ms)");
 		return Result.ok("ok");
 	}
 
