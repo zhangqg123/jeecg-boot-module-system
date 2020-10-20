@@ -379,6 +379,7 @@ public class JstZcDevController extends JeecgController<JstZcDev, IJstZcDevServi
 	@GetMapping(value = "/readClose")
 	public Result<?> readClose(HttpServletRequest req) {
 		JstConstant.runflag=false;
+		JstConstant.runall=false;
 		return Result.ok("ok");
 	}
 	
@@ -386,16 +387,13 @@ public class JstZcDevController extends JeecgController<JstZcDev, IJstZcDevServi
 	@ApiOperation(value = "jst_zc_dev-读取", notes = "jst_zc_dev-读取")
 	@GetMapping(value = "/handleRead")
 	public Result<?> handleRead(HttpServletRequest req) {
-//		boolean allflag = true;
-//		JstConstant.runflag=true;
 		String catNo = req.getParameter("devCat");
-//		jzcList = jstZcCatService.queryJzcList();
-//		jzdList = jstZcDevService.queryJzdList();
-//		jztList = jstZcTargetService.queryJztList();			
-//       MyThread mt=new MyThread(allflag,catNo);
-//        new Thread(mt).start();
-
-		String hr = jstZcDevService.handleRead(catNo);
+		JstConstant.runflag=true;
+		if(catNo.equals("all") && JstConstant.runall==true) {
+			return Result.ok("read all");
+		}else {
+			String hr = jstZcDevService.handleRead(catNo);
+		}
 		return Result.ok("ok");
 	}
 

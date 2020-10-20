@@ -84,7 +84,10 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 	@Override
 	public String handleRead(String catNo) {
 		boolean allflag = true;
-		JstConstant.runflag=true;
+//		JstConstant.runflag=true;
+		if(catNo.equals("all") && JstConstant.runflag==true) {
+			JstConstant.runall=true;
+		}
 		jzcList = jstZcCatService.queryJzcList();
 		jzdList = queryJzdList();
 		jztList = jstZcTargetService.queryJztList();			
@@ -248,7 +251,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 												jstZcAlarm.setSendType("0");
 												jstZcAlarmService.saveSys(jstZcAlarm);
 												alarmFlag=true;
-												System.out.println(devNo+"::通讯中断,发出报警");
+												System.out.println(devNo+"::connection-fail");
 												break;
 											}
 										}
@@ -323,7 +326,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 										jstZcAlarm.setSendTime(new Date());
 										jstZcAlarm.setSendType("0");
 										jstZcAlarmService.saveSys(jstZcAlarm);
-										System.out.println(devNo+"::通讯中断,发出报警");
+										System.out.println(devNo+"::connection-fail");
 							//			break;
 								//	}
 								}
