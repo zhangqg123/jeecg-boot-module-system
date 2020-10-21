@@ -24,6 +24,7 @@ import org.jeecg.modules.qwert.jst.service.IJstZcAlarmService;
 import org.jeecg.modules.qwert.jst.service.IJstZcCatService;
 import org.jeecg.modules.qwert.jst.service.IJstZcDevService;
 import org.jeecg.modules.qwert.jst.service.IJstZcTargetService;
+import org.jeecg.modules.qwert.jst.utils.JstConstant;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -74,6 +75,10 @@ public class WatchDog implements Job {
 
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+		if(JstConstant.watchdog==true) {
+			return;
+		}
+		JstConstant.watchdog=true;
 		jzcList = jstZcCatService.queryJzcList();
 		jzdList = jstZcDevService.queryJzdList();
 		jztList = jstZcTargetService.queryJztList();			
@@ -98,6 +103,7 @@ public class WatchDog implements Job {
 //			log.info(String.format("device %s,jzd %d,jzt %d  !   时间:" + DateUtils.now(), devNo,jzdCollect.size(),jztCollect.size()));
 			targetAudit(jza,jstZcDev,targetNos,jztCollect);
 		}
+		JstConstant.watchdog=false;
 	}
 	
 	public Result<?> targetAudit(JstZcAlarm jza,JstZcDev jzd,String targetNos,List<JstZcTarget> jztCollect) {
