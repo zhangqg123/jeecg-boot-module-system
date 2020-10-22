@@ -72,11 +72,12 @@ public class UserController {
     @GetMapping(value = "/insertAll")
     public void insertAllTest(){
         List<User>list = new ArrayList<>();
-        for(int i = 1; i < 10; i++){
+        for(int i = 1; i < 1000; i++){
             User user = new User();
             user.setName("Make"+i);
             user.setAge(30+i);
             user.setGender(Gender.MALE);
+            user.setUDate(new Date());
             list.add(user);
         }
         repository.insertAll(list);
@@ -106,4 +107,9 @@ public class UserController {
         User user = repository.findAndModify();
         System.out.println(user);
     }
+    @GetMapping(value = "/findAll")
+    public void findAll(){
+        List<User> users = repository.findAll();
+        System.out.println(users);
+    }    
 }

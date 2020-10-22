@@ -3,6 +3,8 @@ package org.jeecg.modules.dbserver.mongo.common.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 import org.jeecg.modules.dbserver.mongo.common.enums.Gender;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,5 +29,7 @@ public class User  extends BaseModel{
     private Integer age;
 
     private Gender gender;
+    
+    private Date uDate;
 
 }

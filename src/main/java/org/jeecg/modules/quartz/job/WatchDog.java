@@ -213,10 +213,19 @@ public class WatchDog implements Job {
 								//				jstZcAlarm.setCatNo(catNo);
 												jstZcAlarm.setTargetNo("connection-fail");
 												jstZcAlarm.setSendTime(new Date());
-												jstZcAlarm.setSendType("1");
-												jstZcAlarmService.updateSys(jstZcAlarm);
+										//		jstZcAlarm.setSendType("1");
+										//		jstZcAlarmService.updateSys(jstZcAlarm);
+												if(jza.getSendType().equals("0")) {
+													jstZcAlarm.setSendType("1");
+													jstZcAlarmService.updateSys(jstZcAlarm);
+												}else {
+													if(jza.getSendType().equals("1")) {
+														jstZcAlarm.setSendType("2");
+														jstZcAlarmService.updateSys(jstZcAlarm);
+													}
+												}
 												alarmFlag=true;
-												System.out.println(devNo+"::通讯中断,发出报警");
+												System.out.println(devNo+"::通讯中断,发出报警::watchdog");
 												break;
 											}
 										}
@@ -293,7 +302,7 @@ public class WatchDog implements Job {
 									}
 								}
 								jstZcAlarmService.updateSys(jstZcAlarm);
-								System.out.println(devNo+"::通讯中断,发出报警");
+								System.out.println(devNo+"::通讯中断,发出报警:::watchdog");
 								alarmFlag=true;
 							}else {
 								jstZcAlarm.setDevNo(devNo);
