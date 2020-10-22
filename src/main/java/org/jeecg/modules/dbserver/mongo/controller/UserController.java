@@ -107,9 +107,9 @@ public class UserController {
         User user = repository.findAndModify();
         System.out.println(user);
     }
-    @GetMapping(value = "/findAll")
-    public void findAll(){
-        List<User> users = repository.findAll();
-        System.out.println(users);
+    @GetMapping(value = "/findByTime")
+    public void findByTime(){
+        List<User> users = repository.findByTime();
+        System.out.println("users size:"+users.size());
     }    
 }

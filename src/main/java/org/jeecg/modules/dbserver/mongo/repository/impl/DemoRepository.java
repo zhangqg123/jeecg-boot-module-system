@@ -14,7 +14,11 @@ import org.jeecg.modules.dbserver.mongo.common.model.Alarm;
 import org.jeecg.modules.dbserver.mongo.common.model.Audit;
 import org.jeecg.modules.dbserver.mongo.common.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+//import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -169,5 +173,26 @@ public class DemoRepository {
         }
 //    	mongoTemplate.dropCollection("t_user");
     }
+
+	public List<User> findByTime() {
+//        Criteria criteria = new Criteria();
+//        Query query = new Query(criteria);
+//        return mongoTemplate.find(query, User.class);
+
+		Aggregation agg;
+	 
+		agg = Aggregation.newAggregation(
+	//			Aggregation.match(Criteria.where("type").is(0)),
+				Aggregation.sort(new Sort(Sort.Direction.DESC, "uDate")),
+				Aggregation.group("name").
+				first("name").as("name").
+				first("uDate").as("uDate").
+				first("age").as("age")
+			);
+		AggregationResults<User> results = mongoTemplate.aggregate(agg,"t_user",User.class);
+		List<User> list = results.getMappedResults();
+		return list;
+
+	}
 
 }
