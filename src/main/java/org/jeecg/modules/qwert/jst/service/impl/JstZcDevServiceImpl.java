@@ -432,7 +432,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 													}
 													if(r4<=Integer.parseInt(a1)) {
 														alarmNo+=jzt.getId()+",";
-														alarmValue+=jzt.getTargetName()+",";
+														alarmValue+=jzt.getTargetName()+"-报警值-"+r4+",";
 													}
 												}
 												if(mn[rm].indexOf(">")!=-1) {
@@ -451,7 +451,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 													}
 													if(r4>=Integer.parseInt(a1)) {
 														alarmNo+=jzt.getId()+",";
-														alarmValue+=jzt.getTargetName()+",";
+														alarmValue+=jzt.getTargetName()+"-报警值-"+r4+",";
 													}
 												}
 											}
