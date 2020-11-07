@@ -10,7 +10,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.jms.Connection;
+import javax.jms.DeliveryMode;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 
+import org.fusesource.stomp.jms.StompJmsConnectionFactory;
+import org.fusesource.stomp.jms.StompJmsDestination;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.constant.CacheConstant;
 import org.jeecg.common.system.query.QueryGenerator;
@@ -97,10 +106,21 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 		return null;
 	}
 	
-	public void threadWork(boolean allflag, String catNo) {
+	public void threadWork(boolean allflag, String catNo) throws JMSException {
 		if(catNo==null||catNo=="") {
 			return;
 		}
+        StompJmsConnectionFactory factory = new StompJmsConnectionFactory();
+        factory.setBrokerURI("tcp://" + JstConstant.host + ":" + JstConstant.port);
+
+        Connection connection;
+		connection = factory.createConnection(JstConstant.user, JstConstant.password);
+        connection.start();
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+//        Destination dest = new StompJmsDestination(JstConstant.destination);
+//        MessageProducer producer = session.createProducer(dest);
+//        producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+	
 		List<JstZcCat> jzcCollect = null;
 		while(allflag&&JstConstant.runflag) {
 			if(!catNo.equals("all")) {
@@ -113,13 +133,17 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 				if(!JstConstant.runflag) {
 					break;
 				}
+//		        Destination dest = new StompJmsDestination(JstConstant.destination);
+//		        MessageProducer producer = session.createProducer(dest);
+//		        producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 				JstZcCat jstZcCat = jzcCollect.get(i);
 		        List<JstZcDev> jzdCollect = jzdList.stream().filter(u -> jstZcCat.getOriginId().equals(u.getDevCat())).collect(Collectors.toList());
 				List<JstZcTarget> jztCollect = jztList.stream().filter(u -> jstZcCat.getOriginId().equals(u.getDevType())).collect(Collectors.toList());
 
-				targetRead(jzdCollect,jztCollect);
+				targetRead(jzdCollect,jztCollect,session);
 			}
 		}
+        connection.close();
 	}
 
 	/**
@@ -129,9 +153,13 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 	 *
 	 * @param jstZcDev
 	 * @return
+	 * @throws JMSException 
 	 */
 
-	public Result<?> targetRead(List<JstZcDev> jzdCollect,List<JstZcTarget> jztCollect) {
+	public Result<?> targetRead(List<JstZcDev> jzdCollect,List<JstZcTarget> jztCollect,Session session) throws JMSException {
+        Destination dest = new StompJmsDestination(JstConstant.destination);
+        MessageProducer producer = session.createProducer(dest);
+        producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
 		for (int i = 0; i < jzdCollect.size(); i++) {
 			if(!JstConstant.runflag) {
@@ -567,6 +595,9 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 		        audit.setAuditValue(resValue);
 		        audit.setAuditTime(new Date());
 		        repository.insertAudit(audit);
+	            TextMessage msg = session.createTextMessage(audit.getAuditValue());
+//	            msg.setIntProperty("id", i);
+	            producer.send(msg);
 			} catch (Exception e) {
 			      e.printStackTrace();
 			}			
@@ -594,6 +625,9 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 				System.out.println("开始时间:" + start + "; 结束时间:" + end + "; 用时:" + (end - start) + "(ms)");
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (JMSException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

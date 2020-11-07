@@ -137,6 +137,10 @@ public class DemoRepository {
     public List<User> findAll(){
         return mongoTemplate.findAll(User.class);
     }
+    /** 查询数据：查询全部数据 */
+    public List<Audit> findAllAudit(){
+        return mongoTemplate.findAll(Audit.class);
+    }
 
     /** 查询并删除数据：根据传入的筛选条件进行查询 全部符合条件的数据，返回并删除数据 */
     public List<User> findAllAndRemove(Integer age){

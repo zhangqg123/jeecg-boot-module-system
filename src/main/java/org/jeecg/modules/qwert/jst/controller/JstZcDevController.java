@@ -14,10 +14,22 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLDecoder;
+
+import javax.jms.Connection;
+import javax.jms.DeliveryMode;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.fusesource.stomp.jms.StompJmsConnectionFactory;
+import org.fusesource.stomp.jms.StompJmsDestination;
 import org.jeecg.common.api.vo.Result;
 import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.util.DateUtils;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.conn.modbus4j.ModbusUtil;
 import org.jeecg.modules.conn.snmp.SnmpData;
@@ -388,14 +400,57 @@ public class JstZcDevController extends JeecgController<JstZcDev, IJstZcDevServi
 	@GetMapping(value = "/handleRead")
 	public Result<?> handleRead(HttpServletRequest req) {
 		String catNo = req.getParameter("devCat");
+		if(catNo==null) {
+			return Result.ok("choose category");
+		}
 		JstConstant.runflag=true;
 		if(catNo.equals("all") && JstConstant.runall==true) {
-			return Result.ok("read all");
+			return Result.ok("reading all");
 		}else {
 			String hr = jstZcDevService.handleRead(catNo);
 		}
 		return Result.ok("ok");
 	}
+	
+	@AutoLog(value = "jst_zc_dev-队列")
+	@ApiOperation(value = "jst_zc_dev-队列", notes = "jst_zc_dev-队列")
+	@GetMapping(value = "/readAmq")
+	public Result<?> readAmq(HttpServletRequest req) {
+        StompJmsConnectionFactory factory = new StompJmsConnectionFactory();
+        factory.setBrokerURI("tcp://" + JstConstant.host + ":" + JstConstant.port);
+
+        Connection connection;
+		try {
+			connection = factory.createConnection(JstConstant.user, JstConstant.password);
+	        connection.start();
+	        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+	        Destination dest = new StompJmsDestination(JstConstant.destination);
+	        MessageProducer producer = session.createProducer(dest);
+	        producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+			log.info(String.format(" Jeecg-Boot 普通定时任务 SampleJob !  时间:" + DateUtils.getTimestamp()));
+			List<Audit> auditList = repository.findAllAudit();
+			for(int i=0;i<auditList.size();i++) {
+				Audit audit = auditList.get(i);
+	            TextMessage msg = session.createTextMessage(audit.getAuditValue());
+	            msg.setIntProperty("id", i);
+	            producer.send(msg);
+  //              System.out.println(String.format("Sent %d messages", i));
+				
+			}
+	        connection.close();
+
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Result.ok("ok");
+	}
+    private static String env(String key, String defaultValue) {
+        String rc = System.getenv(key);
+        if( rc== null )
+            return defaultValue;
+        return rc;
+    }
 
 
 	public boolean isNumeric(String str) {
