@@ -90,11 +90,11 @@ public class SnmpData {
 					VariableBinding vb = response.get(i);
 					String oo = vb.getOid() + " = " + vb.getVariable();
 					snmpList.add(oo);
-					System.out.println(vb.getOid() + " = " + vb.getVariable());
+		//			System.out.println(vb.getOid() + " = " + vb.getVariable());
 				}
 
 			}
-			System.out.println("SNMP GET one OID value finished !");
+		//	System.out.println("SNMP GET one OID value finished !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("SNMP Get Exception:" + e);

@@ -225,12 +225,12 @@ public class WatchDog implements Job {
 													}
 												}
 												alarmFlag=true;
-												System.out.println(devNo+"::通讯中断,发出报警::watchdog");
+			//									System.out.println(devNo+"::通讯中断,发出报警::watchdog");
 												break;
 											}
 										}
 									}
-									System.out.println(devNo+"::"+results);
+			//						System.out.println(devNo+"::"+results);
 									batch = new BatchRead<String>();
 									flag = false;
 									tmpOffset = offset;
@@ -244,7 +244,7 @@ public class WatchDog implements Job {
 	
 								if (extype) {
 									res = ModbusUtil.readInputRegistersTest(master, slaveId, offset, len);
-									System.out.println(devNo+"::"+tmpInstruct+"::"+res);
+				//					System.out.println(devNo+"::"+tmpInstruct+"::"+res);
 									if(res.equals("devicefail")) {
 										break;
 									}
@@ -261,7 +261,7 @@ public class WatchDog implements Job {
 				//				System.out.println(jzd.getDevNo());
 								if (extype) {
 									res = ModbusUtil.readHoldingRegistersTest(master, slaveId, offset, len);
-									System.out.println(devNo+"::"+tmpInstruct+"::"+res);
+				//					System.out.println(devNo+"::"+tmpInstruct+"::"+res);
 									if(res.equals("devicefail")) {
 										break;
 									}
@@ -302,7 +302,7 @@ public class WatchDog implements Job {
 									}
 								}
 								jstZcAlarmService.updateSys(jstZcAlarm);
-								System.out.println(devNo+"::通讯中断,发出报警:::watchdog");
+			//					System.out.println(devNo+"::通讯中断,发出报警:::watchdog");
 								alarmFlag=true;
 							}else {
 								jstZcAlarm.setDevNo(devNo);
@@ -315,10 +315,10 @@ public class WatchDog implements Job {
 			//					jstZcAlarmService.deleteSys(jza.getId());									
 							}
 							resList.add(results.toString());
-							System.out.println(devNo+"::"+results);
+			//				System.out.println(devNo+"::"+results);
 						}
 	//					System.out.println(results);
-						System.out.println(devNo+"::resList.size::"+resList.size());
+		//				System.out.println(devNo+"::resList.size::"+resList.size());
 						for(int ri=0;ri<resList.size();ri++) {
 							String r1=(String) resList.get(ri);
 							r1=r1.replaceAll(" ", "");
@@ -464,7 +464,7 @@ public class WatchDog implements Job {
 				community = jsonConInfo.getString("community");
 				jztCollect.stream().sorted(Comparator.comparing(JstZcTarget::getInstruct));
 				List<String> oidList = new ArrayList<String>();
-				System.out.println(devNo+"::");
+	//			System.out.println(devNo+"::");
 				for (int j = 0; j < jztCollect.size(); j++) {
 					JstZcTarget jzt = jztCollect.get(j);
 					String oidval = jzt.getInstruct();

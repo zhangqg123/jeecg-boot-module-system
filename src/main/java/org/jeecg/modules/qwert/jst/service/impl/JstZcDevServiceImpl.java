@@ -279,12 +279,12 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 												jstZcAlarm.setSendType("0");
 												jstZcAlarmService.saveSys(jstZcAlarm);
 												alarmFlag=true;
-												System.out.println(devNo+"::connection-fail");
+				//								System.out.println(devNo+"::connection-fail");
 												break;
 											}
 										}
 									}
-									System.out.println(devNo+"::"+results);
+				//					System.out.println(devNo+"::"+results);
 									batch = new BatchRead<String>();
 									flag = false;
 									tmpOffset = offset;
@@ -298,7 +298,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 	
 								if (extype) {
 									res = ModbusUtil.readInputRegistersTest(master, slaveId, offset, len);
-									System.out.println(devNo+"::"+tmpInstruct+"::"+res);
+				//					System.out.println(devNo+"::"+tmpInstruct+"::"+res);
 									if(res.equals("devicefail")) {
 										break;
 									}
@@ -315,7 +315,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 				//				System.out.println(jzd.getDevNo());
 								if (extype) {
 									res = ModbusUtil.readHoldingRegistersTest(master, slaveId, offset, len);
-									System.out.println(devNo+"::"+tmpInstruct+"::"+res);
+				//					System.out.println(devNo+"::"+tmpInstruct+"::"+res);
 									if(res.equals("devicefail")) {
 										break;
 									}
@@ -354,17 +354,17 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 										jstZcAlarm.setSendTime(new Date());
 										jstZcAlarm.setSendType("0");
 										jstZcAlarmService.saveSys(jstZcAlarm);
-										System.out.println(devNo+"::connection-fail");
+				//						System.out.println(devNo+"::connection-fail");
 							//			break;
 								//	}
 								}
 						//	    Thread.currentThread().sleep(500);
 						//	}
 							resList.add(results.toString());
-							System.out.println(devNo+"::"+results);
+			//				System.out.println(devNo+"::"+results);
 						}
 	//					System.out.println(results);
-						System.out.println(devNo+"::resList.size::"+resList.size());
+		//				System.out.println(devNo+"::resList.size::"+resList.size());
 						String alarmValue="";
 						String alarmNo="";
 						for(int ri=0;ri<resList.size();ri++) {
@@ -570,7 +570,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 				community = jsonConInfo.getString("community");
 				jztCollect.stream().sorted(Comparator.comparing(JstZcTarget::getInstruct));
 				List<String> oidList = new ArrayList<String>();
-				System.out.println(devNo+"::");
+		//		System.out.println(devNo+"::");
 				for (int j = 0; j < jztCollect.size(); j++) {
 					JstZcTarget jzt = jztCollect.get(j);
 					String oidval = jzt.getInstruct();

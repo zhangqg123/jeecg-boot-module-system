@@ -20,9 +20,9 @@ public class StartService implements ApplicationRunner {
 	private IJstZcDevService jstZcDevService;
     @Override
     public void run(ApplicationArguments args) throws Exception {
-    //    System.out.println("auto start handle read at :"+new Date());
-//        JstConstant.runflag=true;
-//        String hr = jstZcDevService.handleRead("all");
+        System.out.println("auto start handle read at :"+new Date());
+        JstConstant.runflag=true;
+        String hr = jstZcDevService.handleRead("all");
     }
 
 
