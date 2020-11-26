@@ -125,6 +125,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/work/thingjs/artemis/gateId", "anon");
 		filterChainDefinitionMap.put("/work/thingjs/artemis/hello", "anon");
 		filterChainDefinitionMap.put("/work/mongo/**", "anon"); //mongo
+		filterChainDefinitionMap.put("/work/jst/**", "anon"); //mongo
 		//排除Online请求
 		filterChainDefinitionMap.put("/auto/cgform/**", "anon");
 

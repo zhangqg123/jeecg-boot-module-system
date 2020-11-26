@@ -53,10 +53,12 @@ public class SnmpData {
 
 	/* 根据OID，获取单条消息 */
 	public static List snmpGet(String ip, String community, String oid, String dev_no) {
+		
 		List snmpList = new ArrayList();
 		CommunityTarget target = createDefault(ip, community);
 		Snmp snmp = null;
 		try {
+			Thread.sleep(10);
 			PDU pdu = new PDU();
 			// pdu.add(new VariableBinding(new OID(new int[]
 			// {1,3,6,1,2,1,1,2})));
@@ -90,7 +92,7 @@ public class SnmpData {
 					VariableBinding vb = response.get(i);
 					String oo = vb.getOid() + " = " + vb.getVariable();
 					snmpList.add(oo);
-		//			System.out.println(vb.getOid() + " = " + vb.getVariable());
+					System.out.println(vb.getOid() + " = " + vb.getVariable());
 				}
 
 			}

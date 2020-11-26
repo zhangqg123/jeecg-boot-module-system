@@ -8,5 +8,6 @@ public class JstConstant  {
     public static String password = "admin";
     public static String host = "localhost";
     public static int port = 61613;
-    public static String destination = "/queue/event";
+    public static String destination = "/queue/socket";
+    public static String destination2 = "/queue/snmp";
 }

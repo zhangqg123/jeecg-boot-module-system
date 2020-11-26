@@ -202,12 +202,13 @@ public class WatchDog implements Job {
 	
 								if (flag == true) {
 									if(tmpOffset>0) {
+										Thread.sleep(100);
 										results = master.send(batch);
 										resList.add(results.toString());
 										JstZcAlarm jstZcAlarm = new JstZcAlarm();
 										if(results.toString().equals("{}")) {
 											revnull=revnull+1;
-											if(revnull>0) {
+											if(offset<100&&revnull>0) {
 												jstZcAlarm.setId(jza.getId());
 								//				jstZcAlarm.setDevNo(devNo);
 								//				jstZcAlarm.setCatNo(catNo);
@@ -286,10 +287,11 @@ public class WatchDog implements Job {
 	
 						}
 						if (batchSend == true && alarmFlag==false) {
+							Thread.sleep(100);
 							results = master.send(batch);
 							JstZcAlarm jstZcAlarm = new JstZcAlarm();
 							jstZcAlarm.setId(jza.getId());
-							if(results.toString().equals("{}")) {
+							if(results.toString().equals("{}")&&jztCollect.size()<80) {
 								jstZcAlarm.setTargetNo("connection-fail");
 								jstZcAlarm.setSendTime(new Date());
 								if(jza.getSendType().equals("0")) {

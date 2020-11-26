@@ -158,8 +158,11 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 
 	public Result<?> targetRead(List<JstZcDev> jzdCollect,List<JstZcTarget> jztCollect,Session session) throws JMSException {
         Destination dest = new StompJmsDestination(JstConstant.destination);
+        Destination dest2 = new StompJmsDestination(JstConstant.destination2);
         MessageProducer producer = session.createProducer(dest);
+        MessageProducer producer2 = session.createProducer(dest2);
         producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+        producer2.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
 		for (int i = 0; i < jzdCollect.size(); i++) {
 			if(!JstConstant.runflag) {
@@ -170,6 +173,10 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 			String devNo=jzd.getDevNo();
 			String devName=jzd.getDevName();
 			String catNo = jzd.getDevCat();
+			String modNo=jzd.getModNo();
+			if(modNo==null||modNo.equals("")) {
+				modNo="blank";
+			}
 			String conInfo = jzd.getConInfo();
 //			System.out.println(conInfo);
 			JSONObject jsonConInfo = JSON.parseObject(conInfo);
@@ -208,7 +215,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 					}
 
 					if (ts > 200) {
-						master.setTimeout(3000);
+						master.setTimeout(500);
 					}
 					master.init();
 					int slaveId = 0;
@@ -257,6 +264,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 									continue;
 								}
 								if (ts > 200 && offset - tmpOffset >= 80) {
+							//	if (offset - tmpOffset >= 40) {
 									flag = true;
 								}
 								tmpInstruct = instruct;
@@ -266,10 +274,11 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 		//							System.out.println(jzd.getDevNo()+"::"+j + "::" + offset);
 									if(tmpOffset>0) {
 										results = master.send(batch);
+										Thread.sleep(100);
 										resList.add(results.toString());
 										if(results.toString().equals("{}")) {
 											revnull=revnull+1;
-											if(revnull>0) {
+											if(offset<100&&revnull>0) {
 												JstZcAlarm jstZcAlarm = new JstZcAlarm();
 												jstZcAlarm.setDevNo(devNo);
 												jstZcAlarm.setDevName(devName);
@@ -279,12 +288,12 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 												jstZcAlarm.setSendType("0");
 												jstZcAlarmService.saveSys(jstZcAlarm);
 												alarmFlag=true;
-				//								System.out.println(devNo+"::connection-fail");
+												System.out.println(devNo+"::connection-fail");
 												break;
 											}
 										}
 									}
-				//					System.out.println(devNo+"::"+results);
+									System.out.println(devNo+"::"+results);
 									batch = new BatchRead<String>();
 									flag = false;
 									tmpOffset = offset;
@@ -298,7 +307,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 	
 								if (extype) {
 									res = ModbusUtil.readInputRegistersTest(master, slaveId, offset, len);
-				//					System.out.println(devNo+"::"+tmpInstruct+"::"+res);
+									System.out.println(devNo+"::"+tmpInstruct+"::"+res);
 									if(res.equals("devicefail")) {
 										break;
 									}
@@ -315,7 +324,7 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 				//				System.out.println(jzd.getDevNo());
 								if (extype) {
 									res = ModbusUtil.readHoldingRegistersTest(master, slaveId, offset, len);
-				//					System.out.println(devNo+"::"+tmpInstruct+"::"+res);
+									System.out.println(devNo+"::"+tmpInstruct+"::"+res);
 									if(res.equals("devicefail")) {
 										break;
 									}
@@ -342,26 +351,23 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 						if (batchSend == true && alarmFlag==false) {
 						//	for(int n=0;n<3;n++) {
 								results = master.send(batch);
-								if(results.toString().equals("{}")) {
-								//	Thread.sleep(500);
-								//	results=master.send(batch);
-								//	if(results.toString().equals("{}")) {
-										JstZcAlarm jstZcAlarm = new JstZcAlarm();
-										jstZcAlarm.setDevNo(devNo);
-										jstZcAlarm.setDevName(devName);
-										jstZcAlarm.setCatNo(catNo);
-										jstZcAlarm.setTargetNo("connection-fail");
-										jstZcAlarm.setSendTime(new Date());
-										jstZcAlarm.setSendType("0");
-										jstZcAlarmService.saveSys(jstZcAlarm);
-				//						System.out.println(devNo+"::connection-fail");
-							//			break;
-								//	}
-								}
-						//	    Thread.currentThread().sleep(500);
-						//	}
-							resList.add(results.toString());
-			//				System.out.println(devNo+"::"+results);
+								Thread.sleep(100);
+
+							if(results.toString().equals("{}")&&jztCollect.size()<80) {
+									JstZcAlarm jstZcAlarm = new JstZcAlarm();
+									jstZcAlarm.setDevNo(devNo);
+									jstZcAlarm.setDevName(devName);
+									jstZcAlarm.setCatNo(catNo);
+									jstZcAlarm.setTargetNo("connection-fail");
+									jstZcAlarm.setSendTime(new Date());
+									jstZcAlarm.setSendType("0");
+									jstZcAlarmService.saveSys(jstZcAlarm);
+									System.out.println(devNo+"::connection-fail");
+							}
+							if(!results.toString().equals("{}")) {
+								resList.add(results.toString());
+							}	
+							System.out.println(devNo+"::"+results);
 						}
 	//					System.out.println(results);
 		//				System.out.println(devNo+"::resList.size::"+resList.size());
@@ -595,9 +601,16 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 		        audit.setAuditValue(resValue);
 		        audit.setAuditTime(new Date());
 		        repository.insertAudit(audit);
-	            TextMessage msg = session.createTextMessage(audit.getAuditValue());
-//	            msg.setIntProperty("id", i);
-	            producer.send(msg);
+		        
+		        String messageBody = "\""+audit.getAuditValue()+"\"";
+		        String sendMessage = "[{"+"devNo:"+devNo+","+"modNo:"+modNo+","+"message:"+messageBody+"}]";
+				TextMessage msg = session.createTextMessage(sendMessage);
+				if (type.equals("SOCKET")) {
+					producer.send(msg);
+	            }
+				if (type.equals("SNMP")) {
+					producer2.send(msg);
+	            }
 			} catch (Exception e) {
 			      e.printStackTrace();
 			}			

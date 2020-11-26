@@ -96,7 +96,7 @@ spring:
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
       datasource:
         master:
-          url: jdbc:mysql://127.0.0.1:3306/jeecg-boot-214?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false
+          url: jdbc:mysql://127.0.0.1:3306/jstdata?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false
           username: root
           password: zqg_zht
           driver-class-name: com.mysql.jdbc.Driver
@@ -119,6 +119,12 @@ spring:
       shutdown-timeout: 100ms
     password: ''
     port: 6379
+  #mongoDB   
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: MongoDB    
 #mybatis plus 设置
 mybatis-plus:
   mapper-locations: classpath*:org/jeecg/modules/**/xml/*Mapper.xml

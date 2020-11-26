@@ -8,6 +8,7 @@ import org.jeecg.common.constant.CacheConstant;
 import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.modules.qwert.jst.entity.JstZcCat;
 import org.jeecg.modules.qwert.jst.entity.JstZcTarget;
+import org.jeecg.modules.qwert.jst.entity.JstZcTarget2;
 import org.jeecg.modules.qwert.jst.mapper.JstZcDevMapper;
 import org.jeecg.modules.qwert.jst.mapper.JstZcTargetMapper;
 import org.jeecg.modules.qwert.jst.service.IJstZcTargetService;
@@ -36,6 +37,11 @@ public class JstZcTargetServiceImpl extends ServiceImpl<JstZcTargetMapper, JstZc
 //		zqw.orderByAsc("instruct");
 //		zqw.orderByAsc("tmp");
 		List<JstZcTarget> jztList = this.jstZcTargetMapper.queryJztList();			
+		return jztList;
+	}
+	@Override
+	public List<JstZcTarget2> queryJztList2() {
+		List<JstZcTarget2> jztList = this.jstZcTargetMapper.queryJztList2();			
 		return jztList;
 	}
 	

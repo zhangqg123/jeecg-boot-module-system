@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.jeecg.modules.qwert.jst.entity.JstZcTarget;
+import org.jeecg.modules.qwert.jst.entity.JstZcTarget2;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -15,5 +17,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface JstZcTargetMapper extends BaseMapper<JstZcTarget> {
 
 	public List<JstZcTarget> queryJztList();
+	public List<JstZcTarget2> queryJztList2();
 
 }

@@ -57,6 +57,9 @@ public class JstZcDev implements Serializable {
 	@Excel(name = "位置", width = 15)
     @ApiModelProperty(value = "位置")
     private java.lang.String position;
+	@Excel(name = "模型编号", width = 15)
+    @ApiModelProperty(value = "模型编号")
+    private java.lang.String modNo;
 	/**状态*/
 	@Excel(name = "状态", width = 15)
     @ApiModelProperty(value = "状态")
