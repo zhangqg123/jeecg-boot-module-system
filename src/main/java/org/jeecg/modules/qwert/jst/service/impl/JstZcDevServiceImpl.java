@@ -350,8 +350,9 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 						}
 						if (batchSend == true && alarmFlag==false) {
 						//	for(int n=0;n<3;n++) {
-								results = master.send(batch);
-								Thread.sleep(100);
+							Thread.sleep(100);
+							results = master.send(batch);
+							//	Thread.sleep(100);
 
 							if(results.toString().equals("{}")&&jztCollect.size()<80) {
 									JstZcAlarm jstZcAlarm = new JstZcAlarm();
