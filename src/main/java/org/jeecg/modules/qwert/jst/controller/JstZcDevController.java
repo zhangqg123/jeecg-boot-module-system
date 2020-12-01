@@ -137,7 +137,7 @@ public class JstZcDevController extends JeecgController<JstZcDev, IJstZcDevServi
 		queryWrapper.orderByAsc("dev_no");
 		Page<JstZcDev> page = new Page<JstZcDev>(pageNo, pageSize);
 		IPage<JstZcDev> pageList = jstZcDevService.page(page, queryWrapper);
-		return Result.ok(pageList);
+		return Result.ok(pageList,JstConstant.runflag);
 	}
 
 	/**
@@ -392,7 +392,7 @@ public class JstZcDevController extends JeecgController<JstZcDev, IJstZcDevServi
 	public Result<?> readClose(HttpServletRequest req) {
 		JstConstant.runflag=false;
 		JstConstant.runall=false;
-		return Result.ok("ok");
+		return Result.ok("ok",false);
 	}
 	
 	@AutoLog(value = "jst_zc_dev-读取")
@@ -405,11 +405,11 @@ public class JstZcDevController extends JeecgController<JstZcDev, IJstZcDevServi
 		}
 		JstConstant.runflag=true;
 		if(catNo.equals("all") && JstConstant.runall==true) {
-			return Result.ok("reading all");
+			return Result.ok("reading all",true);
 		}else {
 			String hr = jstZcDevService.handleRead(catNo);
 		}
-		return Result.ok("ok");
+		return Result.ok("ok",true);
 	}
 	
 	@AutoLog(value = "jst_zc_dev-队列")

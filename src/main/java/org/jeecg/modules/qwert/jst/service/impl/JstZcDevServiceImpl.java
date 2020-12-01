@@ -288,12 +288,12 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 												jstZcAlarm.setSendType("0");
 												jstZcAlarmService.saveSys(jstZcAlarm);
 												alarmFlag=true;
-												System.out.println(devNo+"::connection-fail");
+		//										System.out.println(devNo+"::connection-fail");
 												break;
 											}
 										}
 									}
-									System.out.println(devNo+"::"+results);
+	//								System.out.println(devNo+"::"+results);
 									batch = new BatchRead<String>();
 									flag = false;
 									tmpOffset = offset;
@@ -363,12 +363,12 @@ public class JstZcDevServiceImpl extends ServiceImpl<JstZcDevMapper, JstZcDev> i
 									jstZcAlarm.setSendTime(new Date());
 									jstZcAlarm.setSendType("0");
 									jstZcAlarmService.saveSys(jstZcAlarm);
-									System.out.println(devNo+"::connection-fail");
+			//						System.out.println(devNo+"::connection-fail");
 							}
 							if(!results.toString().equals("{}")) {
 								resList.add(results.toString());
 							}	
-							System.out.println(devNo+"::"+results);
+		//					System.out.println(devNo+"::"+results);
 						}
 	//					System.out.println(results);
 		//				System.out.println(devNo+"::resList.size::"+resList.size());

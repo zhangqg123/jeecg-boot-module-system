@@ -14,6 +14,7 @@ import org.jeecg.common.system.query.QueryGenerator;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.qwert.jst.entity.JstZcAlarm;
 import org.jeecg.modules.qwert.jst.service.IJstZcAlarmService;
+import org.jeecg.modules.qwert.jst.utils.JstConstant;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -70,7 +71,7 @@ public class JstZcAlarmController extends JeecgController<JstZcAlarm, IJstZcAlar
 		queryWrapper.between("send_type","0","2");
 		Page<JstZcAlarm> page = new Page<JstZcAlarm>(pageNo, pageSize);
 		IPage<JstZcAlarm> pageList = jstZcAlarmService.page(page, queryWrapper);
-		return Result.ok(pageList);
+		return Result.ok(pageList,JstConstant.runflag);
 	}
 	
 	/**

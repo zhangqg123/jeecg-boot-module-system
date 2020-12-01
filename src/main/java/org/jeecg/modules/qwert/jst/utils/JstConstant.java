@@ -1,7 +1,7 @@
 package org.jeecg.modules.qwert.jst.utils;
 
 public class JstConstant  {
-    public static boolean runflag = true;
+    public static boolean runflag = false;
     public static boolean runall = false;
     public static boolean watchdog=false;
     public static String user = "admin";
